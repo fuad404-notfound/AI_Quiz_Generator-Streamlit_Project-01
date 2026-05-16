@@ -1,8 +1,7 @@
 from google import genai
 from dotenv import load_dotenv
-import os, io
+import os ,io
 from gtts import gTTS
-import streamlit as st
 
 # loading the environment variable
 load_dotenv()
@@ -17,7 +16,7 @@ def note_generator(images):
 
     response = client.models.generate_content(
         model = "gemini-3-flash-preview",
-        contents=[images, prompt])
+        contents=[*images, prompt])
     
     return response.text
 # audio generator
@@ -28,13 +27,13 @@ def audio_transcription(text):
     return audio_buffer
 
 # quiz generator
-def quiz_generator(image, difficulty):
+def quiz_generator(images, difficulty):
     prompt = f"""Generate 5 quizes based on the {difficulty}.
     Generate a multiple-choice quiz.write answer below after each question and options completed.
     make sure to add markdown to differentiate the options """
 
     response = client.models.generate_content(
         model = "gemini-3-flash-preview",
-        contents=[image, prompt])
+        contents=[*images, prompt])
         
     return response.text

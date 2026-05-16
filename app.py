@@ -10,31 +10,31 @@ st.divider()
 # image upload part
 with st.sidebar:
     st.header("Controls")
-    images = st.file_uploader("Uppload the photos of your note", 
+    images = st.file_uploader("Upload the photos of your note", 
                      type=['jpg', 'jpeg', 'png'],
                      accept_multiple_files=True)
     pil_images = []
     # image processing exeption handling
-    try:
-        if images:
+    if images:
+        if len(images) > 3:
+            st.error("Cannot upload more than 3 images")
+            pil_images = []
+        try:
             for img in images:
                 pil_img = Image.open(img)
                 pil_images.append(pil_img)
-    except Exception as e:
-        st.error(f"Error while processing images: {e}")
+        
+        except Exception as e:
+            st.error(f"Error while processing images: {e}")
+            
+        else:
+            st.subheader("Uploaded images")
 
-    else: 
-        if images:
-            if len(images) > 3:
-                st.error("Cannot upload more than 3 images")
-            else:
-                st.subheader("Uploaded images")
-
-                col = st.columns(len(images))
-
-                for i, image in enumerate(images):
-                    with col[i]:
-                        st.image(image)
+            col = st.columns(len(images))
+                
+            for i, image in enumerate(images):
+                with col[i]:
+                    st.image(image)
 
     # difficulty catagory part
     selected_option = st.selectbox("Enter the difficulty level of your quiz",
@@ -88,7 +88,7 @@ if pressed:
              # the portion below will be replaced by API call
                 with st.spinner("AI is generating quizzes for you"):
                     quizzes = quiz_generator(pil_images, selected_option)
-                st.markdown(quizzes)
+                    st.markdown(quizzes)
 
         except Exception as e:
             st.error(f"Something went wrong: {e}")
